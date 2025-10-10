@@ -14,10 +14,10 @@ app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, "/frontend")));
+app.use(express.static(path.join(__dirname, "frontend")));
 
 // Home page
-app.get("/", (req, res) => res.sendFile(path.join(__dirname, "/frontend/index.html")));
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "frontend/index.html")));
 
 // REGISTER
 app.post("/api/users/register", async (req, res) => {
@@ -90,4 +90,5 @@ app.post("/api/orders", async (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
 
