@@ -12,7 +12,7 @@
     body {
       margin: 0;
       font-family: 'Arial', sans-serif;
-      background:rgb(90, 125, 200);;
+      background: rgb(90, 125, 200);
       padding: 40px;
     }
 
@@ -68,7 +68,7 @@
     .qty-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 20px;
     }
 
     .qty-btn {
@@ -83,7 +83,7 @@
       background: none;
       border: none;
       color: #999;
-      font-size: 20px;
+      font-size: 30px;
       cursor: pointer;
     }
 
@@ -138,6 +138,50 @@
       text-decoration: underline;
     }
 
+    /* ✅ Responsive Design Fix */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
+
+      .container {
+        flex-direction: column;  /* Stack vertically */
+        width: 100%;
+      }
+
+      .cart-section, 
+      .summary-section {
+        flex: none;
+        width: 100%;
+        padding: 20px;
+      }
+
+      .summary-section {
+        margin-top: 20px;
+      }
+
+      .cart-item {
+        flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+        text-align: center;
+      }
+
+      .cart-item img {
+        margin-bottom: 10px;
+      }
+
+      .qty-controls {
+        justify-content: center;
+      }
+
+      .summary-section select,
+      .summary-section input {
+        font-size: 16px;
+      }
+
+      .checkout-btn {
+        font-size: 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -173,103 +217,103 @@
     </div>
   </div>
 
-<script type="module">
-import { fetchProductById, placeOrderAPI } from "./js/api.js";
+  <script type="module">
+    import { fetchProductById, placeOrderAPI } from "./js/api.js";
 
-const cartList = document.getElementById("cart-list");
-const itemCount = document.getElementById("item-count");
-const subtotalDisplay = document.getElementById("subtotal");
-const totalPriceDisplay = document.getElementById("total-price");
-const shippingSelect = document.getElementById("shipping");
+    const cartList = document.getElementById("cart-list");
+    const itemCount = document.getElementById("item-count");
+    const subtotalDisplay = document.getElementById("subtotal");
+    const totalPriceDisplay = document.getElementById("total-price");
+    const shippingSelect = document.getElementById("shipping");
 
-const updateCart = async () => {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  if (cart.length === 0) {
-    cartList.innerHTML = "<p>Your cart is empty</p>";
-    itemCount.textContent = "0";
-    subtotalDisplay.textContent = "0.00";
-    totalPriceDisplay.textContent = "0.00";
-    return;
-  }
+    const updateCart = async () => {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (cart.length === 0) {
+        cartList.innerHTML = "<p>Your cart is empty</p>";
+        itemCount.textContent = "0";
+        subtotalDisplay.textContent = "0.00";
+        totalPriceDisplay.textContent = "0.00";
+        return;
+      }
 
-  cartList.innerHTML = "";
-  let subtotal = 0;
+      cartList.innerHTML = "";
+      let subtotal = 0;
 
-  for (let item of cart) {
-    const product = await fetchProductById(item.id);
-    subtotal += product.price * item.qty;
+      for (let item of cart) {
+        const product = await fetchProductById(item.id);
+        subtotal += product.price * item.qty;
 
-    cartList.innerHTML += `
-      <li class="cart-item">
-        <img src="images/products/${product.image}" alt="${product.name}" />
-        <div class="item-details">
-          <h4>${product.name}</h4>
-          <p>${product.category || "Cotton T-shirt"}</p>
-        </div>
-        <div class="qty-controls">
-          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
-          <span>${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
-        </div>
-        <span>€${(product.price * item.qty).toFixed(2)}</span>
-        <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
-      </li>
-    `;
-  }
+        cartList.innerHTML += `
+          <li class="cart-item">
+            <img src="images/products/${product.image}" alt="${product.name}" />
+            <div class="item-details">
+              <h4>${product.name}</h4>
+              <p>${product.category || "Cotton T-shirt"}</p>
+            </div>
+            <div class="qty-controls">
+              <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+              <span>${item.qty}</span>
+              <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+            </div>
+            <span>€${(product.price * item.qty).toFixed(2)}</span>
+            <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
+          </li>
+        `;
+      }
 
-  const shippingCost = parseFloat(shippingSelect.value);
-  itemCount.textContent = cart.reduce((acc, item) => acc + item.qty, 0);
-  subtotalDisplay.textContent = subtotal.toFixed(2);
-  totalPriceDisplay.textContent = (subtotal + shippingCost).toFixed(2);
-};
+      const shippingCost = parseFloat(shippingSelect.value);
+      itemCount.textContent = cart.reduce((acc, item) => acc + item.qty, 0);
+      subtotalDisplay.textContent = subtotal.toFixed(2);
+      totalPriceDisplay.textContent = (subtotal + shippingCost).toFixed(2);
+    };
 
-window.changeQty = (id, change) => {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const item = cart.find(c => c.id === id);
-  if (item) {
-    item.qty += change;
-    if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
-    localStorage.setItem("cart", JSON.stringify(cart));
+    window.changeQty = (id, change) => {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const item = cart.find(c => c.id === id);
+      if (item) {
+        item.qty += change;
+        if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCart();
+      }
+    };
+
+    window.removeItem = (id) => {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart = cart.filter(c => c.id !== id);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCart();
+    };
+
+    shippingSelect.addEventListener("change", updateCart);
+
+    document.getElementById("place-order-btn").addEventListener("click", async () => {
+      const shipping = document.getElementById("shipping").value;
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let total = 0;
+      for (let item of cart) {
+        const p = await fetchProductById(item.id);
+        total += p.price * item.qty;
+        item.price = p.price;
+      }
+
+      const shippingCost = parseFloat(shipping);
+      total += shippingCost;
+
+      const shippingAddress = "N/A"; // You can add input field if needed
+      const userId = localStorage.getItem("userId");
+      if (!userId) return alert("Login first");
+
+      const res = await placeOrderAPI({ user_id: userId, total, shipping_address: shippingAddress, items: cart });
+      if (res.orderId) {
+        alert("Order placed successfully!");
+        localStorage.removeItem("cart");
+        location.href = "shop.html";
+      }
+    });
+
     updateCart();
-  }
-};
+  </script>
 
-window.removeItem = (id) => {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart = cart.filter(c => c.id !== id);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCart();
-};
-
-shippingSelect.addEventListener("change", updateCart);
-
-document.getElementById("place-order-btn").addEventListener("click", async () => {
-  const shipping = document.getElementById("shipping").value;
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let total = 0;
-  for (let item of cart) {
-    const p = await fetchProductById(item.id);
-    total += p.price * item.qty;
-    item.price = p.price;
-  }
-
-  const shippingCost = parseFloat(shipping);
-  total += shippingCost;
-
-  const shippingAddress = "N/A"; // You can add input field if needed
-  const userId = localStorage.getItem("userId");
-  if (!userId) return alert("Login first");
-
-  const res = await placeOrderAPI({ user_id: userId, total, shipping_address: shippingAddress, items: cart });
-  if (res.orderId) {
-    alert("Order placed successfully!");
-    localStorage.removeItem("cart");
-    location.href = "shop.html";
-  }
-});
-
-updateCart();
-</script>
 </body>
 </html>
-
