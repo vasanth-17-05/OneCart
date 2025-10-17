@@ -24,7 +24,7 @@ export const localProducts = [
     description:"Wireless over-ear headphones with deep bass, noise cancellation, and long battery." },
   { id: 11, name: "MacBook M4", price: 200, image: "mac.jpg",
     description:"Apple MacBook M4 with M4 chip, Liquid Retina display, and all-day battery." },
-  { id: 12, name: "Nothing Mobile", price: 2990, image: "nothing.jpg",
+  { id: 12, name: "Nothing Mobile", price: 2990, image: "Nothing.jpg",
     description:"Futuristic smartphone with transparent design and next-gen performance." }
 ];
 
@@ -80,3 +80,4 @@ export const placeOrderAPI = async (order) =>
       body: JSON.stringify(order),
     })
   ).json();
+
