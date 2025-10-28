@@ -31,31 +31,7 @@ The Luxury E-Commerce website provides an elegant shopping interface with featur
 
 ---
 
-## 📁 Folder Structure
 
-luxury-ecommerce/
-│
-├── app.js
-├── package.json
-├── routes/
-│ ├── productRoutes.js
-│ ├── userRoutes.js
-│ └── orderRoutes.js
-├── models/
-│ ├── db.js
-│ ├── productModel.js
-│ ├── userModel.js
-│ └── orderModel.js
-├── public/
-│ ├── css/
-│ ├── js/
-│ └── images/
-├── views/
-│ ├── index.html
-│ ├── product.html
-│ ├── cart.html
-│ └── checkout.html
-└── README.md
 
 yaml
 Copy code
